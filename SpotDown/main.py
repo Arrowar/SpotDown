@@ -6,6 +6,7 @@ from typing import Dict, List, Optional
 
 # Internal utils
 from SpotDown.utils.logger import Logger
+from SpotDown.utils.file_utils import file_utils
 from SpotDown.utils.console_utils import ConsoleUtils
 from SpotDown.upload.update import update as git_update
 from SpotDown.extractor.spotify_extractor import SpotifyExtractor
@@ -109,6 +110,7 @@ def run():
     console = ConsoleUtils()
     console.start_message()
     git_update()
+    file_utils.get_system_summary()
 
     spotify_url = console.get_spotify_url()
     max_results = 5

@@ -157,7 +157,7 @@ class ConsoleUtils:
             str: Entered Spotify URL
         """
         while True:
-            url = Prompt.ask("[purple]Enter Spotify URL[/purple][green]").strip()
+            url = Prompt.ask("\n[purple]Enter Spotify URL[/purple][green]").strip()
 
             if not url:
                 self.console.print("[red]URL cannot be empty. Please enter a Spotify track URL.[/red]")

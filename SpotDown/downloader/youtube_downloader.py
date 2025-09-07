@@ -15,7 +15,7 @@ from rich.console import Console
 
 # Internal utils
 from SpotDown.utils.config_json import config_manager
-from SpotDown.utils.file_utils import FileUtils
+from SpotDown.utils.file_utils import file_utils
 
 
 # Variable
@@ -25,7 +25,7 @@ quality = config_manager.get("DOWNLOAD", "quality")
 class YouTubeDownloader:
     def __init__(self):
         self.console = Console()
-        self.file_utils = FileUtils()
+        self.file_utils = file_utils
 
     def download(self, video_info: Dict, spotify_info: Dict) -> bool:
         """
@@ -87,6 +87,7 @@ class YouTubeDownloader:
                 '--no-playlist',
                 '--embed-metadata',
                 '--add-metadata',
+                '--ffmpeg-location', self.file_utils.ffmpeg_path
             ]
             
             if cover_path and cover_path.exists():
