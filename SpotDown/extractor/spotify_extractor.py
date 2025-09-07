@@ -171,8 +171,8 @@ class SpotifyExtractor:
                         album = track['album']
 
                         # Process extracted data
-                        release_date = album['release_date']
-                        year = release_date.split('-')[0] if release_date else None
+                        #release_date = album['release_date']
+                        #year = release_date.split('-')[0] if release_date else None
 
                         # Extract duration in seconds
                         duration_ms = track['duration_ms']
