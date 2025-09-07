@@ -83,7 +83,7 @@ SpotDown uses a JSON configuration file with the following structure:
     },
     "BROWSER": {
         "headless": true,
-        "timeout": 6
+        "timeout": 8
     }
 }
 ```
