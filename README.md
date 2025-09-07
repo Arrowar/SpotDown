@@ -30,7 +30,6 @@
 - [⚙️ Setup](#setup)
 - [⚙️ Configuration](#configuration)
 - [💻 Usage](#usage)
-- [⚠️ Disclaimer](#disclaimer)
 
 ## Features
 
