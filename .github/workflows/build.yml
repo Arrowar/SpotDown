@@ -50,3 +50,89 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: twine upload dist/*
+
+  build:
+    if: startsWith(github.ref_name, 'v') || (github.event_name == 'workflow_dispatch' && github.event.inputs.publish_pypi == 'false')
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            artifact_name: SpotDown_win
+            executable: SpotDown_win.exe
+            separator: ';'
+
+          - os: macos-latest
+            artifact_name: SpotDown_mac
+            executable: SpotDown_mac
+            separator: ':'
+
+          - os: ubuntu-latest
+            artifact_name: SpotDown_linux_latest
+            executable: SpotDown_linux_latest
+            separator: ':'
+
+          - os: ubuntu-22.04
+            artifact_name: SpotDown_linux_previous
+            executable: SpotDown_linux_previous
+            separator: ':'
+
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get the latest tag
+        id: get_latest_tag
+        shell: pwsh
+        run: |
+          $latestTag = git describe --tags --abbrev=0
+          echo "latest_tag=$latestTag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade certifi
+          python -m pip install -r requirements.txt
+          python -m pip install pyinstaller
+
+      - name: Build executable with PyInstaller
+        shell: bash
+        run: |
+          pyinstaller --onefile \
+            --hidden-import=rich \
+            --hidden-import=httpx \
+            --hidden-import=unidecode \
+            --hidden-import=ua_generator \
+            --hidden-import=yt_dlp \
+            --hidden-import=PIL \
+            --hidden-import=spotipy \
+            --additional-hooks-dir=pyinstaller/hooks \
+            --add-data "SpotDown${{ matrix.separator }}SpotDown" \
+            --name=${{ matrix.artifact_name }} run.py
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: dist/${{ matrix.executable }}
+
+      - name: Create or update release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: dist/${{ matrix.executable }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

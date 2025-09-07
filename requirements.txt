@@ -1,8 +1,8 @@
 rich
 httpx
-playwright
 unidecode
 ua-generator
 unidecode
 yt-dlp
 Pillow
+spotipy

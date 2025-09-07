@@ -10,6 +10,13 @@
 
 [![Donate PayPal](https://img.shields.io/badge/💳_Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white&labelColor=2d3748)](https://www.paypal.com/donate/?hosted_button_id=UXTWMT8P6HE2C)
 
+## 🚀 Download & Install
+
+[![Windows](https://img.shields.io/badge/🪟_Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_win.exe)
+[![macOS](https://img.shields.io/badge/🍎_macOS-000000?style=for-the-badge&logo=apple&logoColor=white&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_mac)
+[![Linux latest](https://img.shields.io/badge/🐧_Linux_latest-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_linux_latest)
+[![Linux 22.04](https://img.shields.io/badge/🐧_Linux_22.04-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_linux_previous)
+
 ---
 
 *⚡ **Quick Start:** `pip install spotdown && spotdown`*
@@ -20,6 +27,7 @@
 
 - [✨ Features](#features)
 - [🛠️ Installation](#️installation)
+- [⚙️ Setup](#setup)
 - [⚙️ Configuration](#configuration)
 - [💻 Usage](#usage)
 - [⚠️ Disclaimer](#disclaimer)
@@ -67,6 +75,24 @@ After installation, run this one-time setup command:
 playwright install chromium
 ```
 
+## Setup
+
+1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/)
+2. Log in and create a new application
+3. Copy your **Client ID** and **Client Secret**
+4. Create a file named `.env` in the SpotDown directory with the following content:
+
+```
+SPOTIFY_CLIENT_ID=your_client_id_here
+SPOTIPY_CLIENT_SECRET=your_client_secret_here
+```
+
+5. Save the file. SpotDown will automatically load these credentials.
+
+### Error Handling
+- If the credentials are missing, SpotDown will log an error and exit.
+- If the credentials are invalid, SpotDown will log an error and exit. Please double-check your `.env` file and credentials.
+
 ## Configuration
 
 SpotDown uses a JSON configuration file with the following structure:
@@ -80,10 +106,6 @@ SpotDown uses a JSON configuration file with the following structure:
     "DOWNLOAD": {
         "auto_first": false,
         "quality": "320K"
-    },
-    "BROWSER": {
-        "headless": true,
-        "timeout": 8
     }
 }
 ```
@@ -97,10 +119,6 @@ SpotDown uses a JSON configuration file with the following structure:
 #### DOWNLOAD Settings
 - **`auto_first`**: Automatically select first search result
 - **`quality`**: Audio quality (320K recommended for best quality)
-
-#### BROWSER Settings
-- **`headless`**: Run browser in background (recommended: true)
-- **`timeout`**: Browser timeout in seconds
 
 ## Usage
 

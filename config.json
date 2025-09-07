@@ -7,9 +7,5 @@
     "DOWNLOAD": {
         "auto_first": false,
         "quality": "320K"
-    },
-    "BROWSER": {
-        "headless": true,
-        "timeout": 8
     }
 }
