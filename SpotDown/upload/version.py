@@ -1,5 +1,5 @@
 __title__ = 'SpotDown'
-__version__ = '1.3.0'
+__version__ = '1.3.1'
 __author__ = 'Arrowar'
 __description__ = 'A command-line program to download music'
 __copyright__ = 'Copyright 2025'

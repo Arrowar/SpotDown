@@ -6,7 +6,7 @@ from typing import Dict, List, Optional
 
 # Internal utils
 from SpotDown.utils.logger import Logger
-from SpotDown.utils.file_utils import file_utils
+from SpotDown.utils.os import file_utils
 from SpotDown.utils.console_utils import ConsoleUtils
 from SpotDown.upload.update import update as git_update
 from SpotDown.extractor.spotify_extractor import SpotifyExtractor
@@ -32,20 +32,20 @@ def extract_spotify_data(spotify_url: str, max_retry: int = 3) -> Optional[Dict]
     return None
 
 
-def search_on_youtube(query: str, max_results: int, duration_seconds: Optional[int] = None) -> List[Dict]:
+def search_on_youtube(query: str, spotify_info: Optional[Dict] = None) -> List[Dict]:
     """Search for videos on YouTube and sort them by relevance"""
     with YouTubeExtractor() as youtube_extractor:
-        results = youtube_extractor.search_videos(query, max_results)
-        if results and duration_seconds:
-            youtube_extractor.sort_by_affinity_and_duration(results, {'duration_seconds': duration_seconds})
+        results = youtube_extractor.search_videos(query)
+        if results and spotify_info:
+            youtube_extractor.sort_by_affinity_and_duration(results, spotify_info)
         return results
 
 
 def download_track(video_info: Dict, spotify_info: Dict) -> bool:
     """Download a single track and add metadata"""
     downloader = YouTubeDownloader()
-    music_folder = downloader.file_utils.get_music_folder()
-    filename = downloader.file_utils.create_filename(
+    music_folder = file_utils.get_music_folder()
+    filename = file_utils.create_filename(
         spotify_info['artist'],
         spotify_info['title']
     )
@@ -69,7 +69,7 @@ def handle_playlist_download(tracks: List[Dict], max_results: int):
         }
 
         query = f"{spotify_info['artist']} {spotify_info['title']}"
-        youtube_results = search_on_youtube(query, max_results, spotify_info.get('duration_seconds'))
+        youtube_results = search_on_youtube(query, spotify_info)
 
         if not youtube_results:
             console.show_error(f"No YouTube results for {spotify_info['artist']} - {spotify_info['title']}")
@@ -80,10 +80,10 @@ def handle_playlist_download(tracks: List[Dict], max_results: int):
             console.show_error(f"Error downloading {spotify_info['artist']} - {spotify_info['title']}")
 
 
-def handle_single_track_download(spotify_info: Dict, max_results: int):
+def handle_single_track_download(spotify_info: Dict):
     """Handle downloading a single track"""
     query = f"{spotify_info['artist']} {spotify_info['title']}"
-    youtube_results = search_on_youtube(query, max_results, spotify_info.get('duration_seconds'))
+    youtube_results = search_on_youtube(query, spotify_info)
 
     if not youtube_results:
         console.show_error("No YouTube results found.")
@@ -113,7 +113,6 @@ def run():
     file_utils.get_system_summary()
 
     spotify_url = console.get_spotify_url()
-    max_results = 5
 
     if "/playlist/" in spotify_url:
         with SpotifyExtractor() as spotify_extractor:
@@ -122,7 +121,7 @@ def run():
             console.show_error("No tracks found in playlist.")
             return
         console.show_info(f"Found [green]{len(tracks)}[/green] tracks in playlist.")
-        handle_playlist_download(tracks, max_results)
+        handle_playlist_download(tracks)
         return
 
     spotify_info = extract_spotify_data(spotify_url)
@@ -134,4 +133,4 @@ def run():
     console.start_message()
     console.display_spotify_info(spotify_info)
 
-    handle_single_track_download(spotify_info, max_results)
+    handle_single_track_download(spotify_info)

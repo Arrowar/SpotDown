@@ -15,10 +15,15 @@ from rich.console import Console
 
 # Internal utils
 from SpotDown.utils.headers import get_userAgent
+from SpotDown.helpers.string import contains_emoji
+from SpotDown.utils.config_json import config_manager
 
 
 # Variable
 console = Console()
+search_limit = config_manager.get_int("SEARCH", "limit")
+exclude_emoji = config_manager.get_bool("SEARCH", "exclude_emoji")
+
 
 
 class YouTubeExtractor:
@@ -31,13 +36,12 @@ class YouTubeExtractor:
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
-    def search_videos(self, query: str, max_results: int = 5) -> List[Dict]:
+    def search_videos(self, query: str) -> List[Dict]:
         """
         Search for videos on YouTube
         
         Args:
             query (str): Search query
-            max_results (int): Maximum number of results
             
         Returns:
             List[Dict]: List of found videos
@@ -51,7 +55,7 @@ class YouTubeExtractor:
                 response = client.get(search_url, headers={"User-Agent": get_userAgent()})
                 html = response.text
 
-            results = self._extract_youtube_videos(html, max_results)
+            results = self._extract_youtube_videos(html, search_limit)
             logging.info(f"Found {len(results)} results for query: {query}")
             return results
 
@@ -80,19 +84,18 @@ class YouTubeExtractor:
 
     def sort_by_affinity_and_duration(self, youtube_results: List[Dict], spotify_info: Dict):
         """
-        Sort results by duration difference, title match/affinity, and channel match/affinity.
-
-        Args:
-            youtube_results (List[Dict]): List of YouTube videos
-            spotify_info (Dict): Spotify track info
+        Sort results by artist match priority, then duration, then title affinity.
+        Prioritizes exact artist matches in channel name over duration similarity.
         """
-        logging.info(f"Sorting {len(youtube_results)} results by affinity and duration using Spotify info")
+        logging.info(f"Sorting {len(youtube_results)} results by artist affinity and duration")
         target_duration = spotify_info.get('duration_seconds')
         target_title = spotify_info.get('title', '').lower()
-        target_artist = spotify_info.get('artist', '').lower()
+
+        # Split artists and clean them
+        target_artists = [a.strip().lower() for a in spotify_info.get('artist', '').split(',')]
+        logging.info(f"Target artists: {target_artists}")
 
         for result in youtube_results:
-            
             # Duration difference
             if result.get('duration_seconds') is not None and target_duration is not None:
                 result['duration_difference'] = abs(result['duration_seconds'] - target_duration)
@@ -102,31 +105,47 @@ class YouTubeExtractor:
             yt_title = result.get('title', '').lower()
             yt_channel = result.get('channel', '').lower()
 
-            # Exact title match
+            # Title matching
             result['exact_title_match'] = yt_title == target_title
-
-            # Title affinity
             result['title_affinity'] = difflib.SequenceMatcher(None, yt_title, target_title).ratio()
 
-            # Exact channel match
-            result['exact_channel_match'] = yt_channel == target_artist
+            # Artist/Channel matching - check each artist
+            channel_exact_matches = []
+            channel_affinities = []
+            for artist in target_artists:
 
-            # Channel affinity
-            result['channel_affinity'] = difflib.SequenceMatcher(None, yt_channel, target_artist).ratio()
+                # Exact match
+                exact_match = yt_channel == artist
+                channel_exact_matches.append(exact_match)
 
-        # Sort: lowest duration difference, exact title match, highest title affinity,
-        # exact channel match, highest channel affinity
+                # Check if artist is contained in channel
+                contains_artist = artist in yt_channel
+                channel_exact_matches.append(contains_artist)
+
+                # Similarity ratio
+                similarity = difflib.SequenceMatcher(None, yt_channel, artist).ratio()
+                channel_affinities.append(similarity)
+
+            # Best matches
+            result['exact_channel_match'] = any(channel_exact_matches)
+            result['channel_affinity'] = max(channel_affinities) if channel_affinities else 0.0
+
+        # Sorting: 
+        # 1. Exact channel match first (most important)
+        # 2. Then duration difference
+        # 3. Then channel affinity
+        # 4. Then title matching
         youtube_results.sort(
             key=lambda x: (
-                x['duration_difference'],
-                not x['exact_title_match'],  # False (exact match) comes before True
-                -x['title_affinity'],
-                not x['exact_channel_match'],  # False (exact match) comes before True
-                -x['channel_affinity']
+                not x['exact_channel_match'],        # False first (exact matches)
+                x['duration_difference'],            # Lower difference first  
+                -x['channel_affinity'],              # Higher affinity first
+                not x['exact_title_match'],          # False first (exact titles)
+                -x['title_affinity']                 # Higher title affinity first
             )
         )
 
-    def _extract_youtube_videos(self, html: str, max_results: int) -> List[Dict]:
+    def _extract_youtube_videos(self, html: str, limit: int) -> List[Dict]:
         """Extract videos from YouTube HTML"""
         try:
             yt_match = re.search(r'var ytInitialData = ({.+?});', html, re.DOTALL)
@@ -152,13 +171,20 @@ class YouTubeExtractor:
                     if 'videoRenderer' in item:
                         video_info = self._parse_video_renderer(item['videoRenderer'])
 
+                        # Exclude results with emoji in title or channel
                         if video_info:
+                            if exclude_emoji:
+                                title = video_info.get('title', '')
+                                channel = video_info.get('channel', '')
+                                if contains_emoji(title) or contains_emoji(channel):
+                                    continue
+
                             results.append(video_info)
                             
-                        if len(results) >= max_results:
+                        if len(results) >= search_limit:
                             break
                 
-                if len(results) >= max_results:
+                if len(results) >= search_limit:
                     break
 
             logging.info(f"Extracted {len(results)} video(s) from HTML")

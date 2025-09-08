@@ -7,5 +7,9 @@
     "DOWNLOAD": {
         "auto_first": false,
         "quality": "320K"
+    },
+    "SEARCH": {
+        "limit": 5,
+        "exclude_emoji": false
     }
 }

@@ -4,7 +4,6 @@ import os
 import sys
 import time
 import asyncio
-import importlib.metadata
 
 
 # External library
@@ -13,7 +12,7 @@ from rich.console import Console
 
 
 # Internal utilities
-from .version import __version__ as source_code_version, __author__, __title__
+from .version import __author__, __title__
 from SpotDown.utils.headers import get_userAgent
 
 
@@ -79,10 +78,7 @@ def update():
         percentual_stars = 0
 
     # Get the current version (installed version)
-    try:
-        current_version = importlib.metadata.version(__title__)
-    except importlib.metadata.PackageNotFoundError:
-        current_version = source_code_version
+    from .version import __version__ as current_version
 
     # Get commit details
     latest_commit = response_commits[0] if response_commits else None
@@ -100,4 +96,4 @@ def update():
     console.print(f"\n[red]{__title__} has been downloaded [yellow]{total_download_count} [red]times, but only [yellow]{percentual_stars}% [red]of users have starred it.\n\
         [cyan]Help the repository grow today by leaving a [yellow]star [cyan]and [yellow]sharing [cyan]it with others online!")
     
-    time.sleep(2.5)
+    time.sleep(1)
