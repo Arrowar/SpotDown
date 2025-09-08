@@ -29,7 +29,6 @@ setup(
     name="SpotDown",
     version=version["__version__"],
     author="Arrowar",
-    author_email="author@example.com",
     description="A command-line program to download music",
     long_description=long_description,
     long_description_content_type="text/markdown",

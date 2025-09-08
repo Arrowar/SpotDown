@@ -56,7 +56,8 @@ If you prefer to install from source:
 ```bash
 git clone https://github.com/Arrowar/spotdown.git
 cd spotdown
-pip install -e .
+pip install -r "requirements.txt"
+python run.py
 ```
 
 ### Prerequisites
@@ -64,15 +65,6 @@ pip install -e .
 The following dependencies will be automatically installed:
 
 - **Python 3.8+**
-- **FFmpeg** (for audio processing)
-- **yt-dlp** (for downloading)
-- **Playwright** (for web scraping)
-
-After installation, run this one-time setup command:
-
-```bash
-playwright install chromium
-```
 
 ## Setup
 
@@ -82,15 +74,11 @@ playwright install chromium
 4. Create a file named `.env` in the SpotDown directory with the following content:
 
 ```
-SPOTIFY_CLIENT_ID=your_client_id_here
+SPOTIPY_CLIENT_ID=your_client_id_here
 SPOTIPY_CLIENT_SECRET=your_client_secret_here
 ```
 
 5. Save the file. SpotDown will automatically load these credentials.
-
-### Error Handling
-- If the credentials are missing, SpotDown will log an error and exit.
-- If the credentials are invalid, SpotDown will log an error and exit. Please double-check your `.env` file and credentials.
 
 ## Configuration
 
@@ -99,12 +87,17 @@ SpotDown uses a JSON configuration file with the following structure:
 ```json
 {
     "DEFAULT": {
+        "debug": false,
         "clean_console": true,
         "show_message": true
     },
     "DOWNLOAD": {
         "auto_first": false,
         "quality": "320K"
+    },
+    "SEARCH": {
+        "limit": 5,
+        "exclude_emoji": false
     }
 }
 ```
@@ -112,12 +105,17 @@ SpotDown uses a JSON configuration file with the following structure:
 ### Configuration Options
 
 #### DEFAULT Settings
-- **`clean_console`**: Clear console output for cleaner interface
+- **`debug`**: Enable/disable debug mode (detailed logging)
+- **`clean_console`**: Clear console output for a cleaner interface
 - **`show_message`**: Display informational messages during execution
 
 #### DOWNLOAD Settings
-- **`auto_first`**: Automatically select first search result
+- **`auto_first`**: Automatically select the first search result
 - **`quality`**: Audio quality (320K recommended for best quality)
+
+#### SEARCH Settings
+- **`limit`**: Maximum number of results shown for each search
+- **`exclude_emoji`**: Exclude emojis from search results
 
 ## Usage
 

@@ -51,7 +51,7 @@ class SpotifyExtractor:
         client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
 
         if not client_id or not client_secret:
-            console.print("[red]Missing Spotify credentials. Please create a .env file with SPOTIFY_CLIENT_ID and SPOTIPY_CLIENT_SECRET from https://developer.spotify.com/dashboard/")
+            console.print("[red]Missing Spotify credentials. Please create a .env file with SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET from https://developer.spotify.com/dashboard/")
             sys.exit(1)
 
         self.sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
