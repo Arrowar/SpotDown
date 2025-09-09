@@ -229,5 +229,22 @@ class FileUtils:
         ffprobe_str = f"'{FileUtils.ffprobe_path}'" if FileUtils.ffprobe_path else "None"
         console.print(f"[cyan]Path: [red]ffmpeg [bold yellow]{ffmpeg_str}[/bold yellow][white], [red]ffprobe [bold yellow]{ffprobe_str}[/bold yellow][white].")
 
+    @staticmethod
+    def is_song_already_downloaded(artist: str, title: str) -> bool:
+        """
+        Checks if the song file is already present in the Music folder.
+
+        Args:
+            artist (str): Artist name
+            title (str): Song title
+            
+        Returns:
+            bool: True if the file exists, False otherwise
+        """
+        music_folder = FileUtils.get_music_folder()
+        filename = FileUtils.create_filename(artist, title) + ".mp3"
+        file_path = music_folder / filename
+        return file_path.exists()
+
 
 file_utils = FileUtils()

@@ -7,6 +7,7 @@ from typing import Dict, List, Optional
 # Internal utils
 from SpotDown.utils.logger import Logger
 from SpotDown.utils.os import file_utils
+from SpotDown.utils.config_json import config_manager
 from SpotDown.utils.console_utils import ConsoleUtils
 from SpotDown.upload.update import update as git_update
 from SpotDown.extractor.spotify_extractor import SpotifyExtractor
@@ -45,10 +46,16 @@ def download_track(video_info: Dict, spotify_info: Dict) -> bool:
     """Download a single track and add metadata"""
     downloader = YouTubeDownloader()
     music_folder = file_utils.get_music_folder()
-    filename = file_utils.create_filename(
-        spotify_info['artist'],
-        spotify_info['title']
-    )
+
+    artist = spotify_info['artist']
+    title = spotify_info['title']
+    filename = file_utils.create_filename(artist, title)
+
+    # Check if song already exists
+    if file_utils.is_song_already_downloaded(artist, title):
+        console.show_info(f"[yellow]Already exists: {filename}")
+        return False
+    
     console.show_download_info(music_folder, filename)
     console.show_download_start(video_info['title'], video_info['url'])
     return downloader.download(video_info, spotify_info)
@@ -112,25 +119,51 @@ def run():
     git_update()
     file_utils.get_system_summary()
 
-    spotify_url = console.get_spotify_url()
+    spotify_url, url_type = console.get_spotify_url()
 
-    if "/playlist/" in spotify_url:
+    if url_type == "playlist":
         with SpotifyExtractor() as spotify_extractor:
             tracks = spotify_extractor.extract_playlist_tracks(spotify_url)
+            
         if not tracks:
             console.show_error("No tracks found in playlist.")
             return
+        
         console.show_info(f"Found [green]{len(tracks)}[/green] tracks in playlist.")
-        handle_playlist_download(tracks)
+        if config_manager.get_bool("DOWNLOAD", "auto_first"):
+            from SpotDown.downloader.batch_downloader import BatchDownloader
+            console.show_info("Starting batch download for playlist")
+            BatchDownloader(tracks).run()
+        else:
+            handle_playlist_download(tracks, len(tracks))
         return
 
-    spotify_info = extract_spotify_data(spotify_url)
-    if not spotify_info:
-        console.show_error("Can't extract data from Spotify.")
+    if url_type == "track":
+        spotify_info = extract_spotify_data(spotify_url)
+
+        if not spotify_info:
+            console.show_error("Can't extract data from Spotify.")
+            return
+        
+        time.sleep(1)
+        console.start_message()
+        console.display_spotify_info(spotify_info)
+
+        # Check if song already exists before any download/search
+        artist = spotify_info.get('artist', '')
+        title = spotify_info.get('title', '')
+
+        if file_utils.is_song_already_downloaded(artist, title):
+            filename = file_utils.create_filename(artist, title) + ".mp3"
+            console.console.print(f"\n[red]Already exists: {filename}")
+            return False
+        
+        handle_single_track_download(spotify_info)
         return
 
-    time.sleep(1)
-    console.start_message()
-    console.display_spotify_info(spotify_info)
+    if url_type == "artist":
+        console.show_info("Artist download is not yet implemented.")
+        return
 
-    handle_single_track_download(spotify_info)
+    console.show_error("Unsupported or invalid Spotify URL.")
+    return

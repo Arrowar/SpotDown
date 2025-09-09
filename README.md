@@ -92,8 +92,10 @@ SpotDown uses a JSON configuration file with the following structure:
         "show_message": true
     },
     "DOWNLOAD": {
+        "allow_metadata": true,
         "auto_first": false,
-        "quality": "320K"
+        "quality": "320K",
+        "thread": 5
     },
     "SEARCH": {
         "limit": 5,
@@ -110,8 +112,10 @@ SpotDown uses a JSON configuration file with the following structure:
 - **`show_message`**: Display informational messages during execution
 
 #### DOWNLOAD Settings
-- **`auto_first`**: Automatically select the first search result
-- **`quality`**: Audio quality (320K recommended for best quality)
+- **`allow_metadata`**: Enable downloading of thumbnails and embedding metadata in the final file.
+- **`auto_first`**: Automatically select the first search result.
+- **`quality`**: Audio quality (320K recommended for best quality).
+- **`thread`**: Number of concurrent downloads for batch operations.
 
 #### SEARCH Settings
 - **`limit`**: Maximum number of results shown for each search
@@ -157,8 +161,6 @@ Please paste your Spotify URL: https://open.spotify.com/track/4iV5W9uYEdYUVa79Ax
 
 ## To Do
 
-- [ ] Implement batch download queue
-- [ ] Add GUI interface option
 - [ ] Support for additional music platforms
 - [ ] Album art quality selection
 - [ ] Custom output directory configuration

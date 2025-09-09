@@ -22,7 +22,9 @@ SHOW_MESSAGE = config_manager.get('DEFAULT', 'show_message')
 AUTO_FIRST = config_manager.get('DOWNLOAD', 'auto_first')
 
 
-class ConsoleUtils:  
+class ConsoleUtils:
+    def __init__(self):
+        self.console = console
     
     def display_spotify_info(self, spotify_info: Dict):
         """
@@ -150,22 +152,29 @@ class ConsoleUtils:
     
     def get_spotify_url(self) -> str:
         """
-        Get Spotify URL from the user
-        
+        Ottiene l'URL Spotify dall'utente e ritorna anche il tipo (track, playlist, artist, unknown)
         Returns:
-            str: Entered Spotify URL
+            tuple: (url, tipo)
         """
+        def get_spotify_url_type(url: str) -> str:
+            if "/track/" in url:
+                return "track"
+            elif "/playlist/" in url:
+                return "playlist"
+            elif "/artist/" in url:
+                return "artist"
+            return "unknown"
+
         while True:
             url = Prompt.ask("\n[purple]Enter Spotify URL[/purple][green]").strip()
-
             if not url:
-                console.print("[red]URL cannot be empty. Please enter a Spotify track URL.[/red]")
+                console.print("[red]URL cannot be empty. Please enter a Spotify URL.[/red]")
                 continue
-
-            if "/track/" in url or "/playlist/" in url:
-                return url
+            tipo = get_spotify_url_type(url)
+            if tipo != "unknown":
+                return url, tipo
             
-            console.print("[red]Invalid format. Please enter a valid Spotify track URL.[/red]")
+            console.print("[red]Invalid format. Please enter a valid Spotify track, playlist, or artist URL.[/red]")
 
     def start_message(self):
         """Display a stylized start message in the console."""

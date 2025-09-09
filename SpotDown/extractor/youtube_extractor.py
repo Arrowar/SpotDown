@@ -21,6 +21,7 @@ from SpotDown.utils.config_json import config_manager
 
 # Variable
 console = Console()
+auto_first = config_manager.get("DOWNLOAD", "auto_first")
 search_limit = config_manager.get_int("SEARCH", "limit")
 exclude_emoji = config_manager.get_bool("SEARCH", "exclude_emoji")
 
@@ -49,7 +50,9 @@ class YouTubeExtractor:
         try:
             logging.info(f"Starting YouTube search for query: {query}")
             search_url = f"https://www.youtube.com/results?search_query={quote_plus(query)}"
-            console.print(f"\n[bold blue]Searching on YouTube:[/bold blue] {query}")
+            if not auto_first:
+                console.print(f"\n[bold blue]Searching on YouTube:[/bold blue] {query}")
+            logging.info(f"Searching on YouTube: {query}")
 
             with httpx.Client(timeout=10) as client:
                 response = client.get(search_url, headers={"User-Agent": get_userAgent()})
@@ -60,8 +63,9 @@ class YouTubeExtractor:
             return results
 
         except Exception as e:
+            if not auto_first:
+                console.print(f"[red]Error during YouTube search:[/red] {e}")
             logging.error(f"YouTube search error: {e}")
-            print(f"YouTube search error: {e}")
             return []
 
     def sort_by_duration_similarity(self, youtube_results: List[Dict], target_duration: int):
@@ -191,8 +195,9 @@ class YouTubeExtractor:
             return results
 
         except Exception as e:
+            if not auto_first:
+                console.print(f"[red]Error during video extraction:[/red] {e}")
             logging.error(f"Video extraction error: {e}")
-            print(f"Video extraction error: {e}")
             return []
 
     def _parse_video_renderer(self, video_data: Dict) -> Optional[Dict]:
@@ -239,8 +244,9 @@ class YouTubeExtractor:
             }
 
         except Exception as e:
+            if not auto_first:
+                console.print(f"[red]Error parsing video data:[/red] {e}")
             logging.error(f"Video parsing error: {e}")
-            print(f"Video parsing error: {e}")
             return None
 
     def _extract_text(self, text_obj: Dict) -> str:
