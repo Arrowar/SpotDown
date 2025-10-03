@@ -7,8 +7,9 @@
 [![License](https://img.shields.io/github/license/Arrowar/spotdown?logo=gnu&logoColor=white&labelColor=2d3748&color=e53e3e&style=for-the-badge)](https://github.com/Arrowar/spotdown/blob/main/LICENSE)
 
 ## 💝 Support the Project
-
-[![Donate PayPal](https://img.shields.io/badge/💳_Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white&labelColor=2d3748)](https://www.paypal.com/donate/?hosted_button_id=UXTWMT8P6HE2C)
+<a href='https://ko-fi.com/E1E11LVC83' target='_blank'>
+    <img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi4.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+</a>
 
 ## 🚀 Download & Install
 
