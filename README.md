@@ -8,9 +8,9 @@
 ---
 
 [![Windows](https://img.shields.io/badge/ðŸªŸ_Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_win.exe)
-[![macOS](https://img.shields.io/badge/ðŸŽ_macOS-000000?style=for-the-badge&logo=apple&logoColor=white&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_mac)
-[![Linux latest](https://img.shields.io/badge/ðŸ§_Linux_latest-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_linux_latest)
-[![Linux 22.04](https://img.shields.io/badge/ðŸ§_Linux_22.04-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_linux_previous)
+[![macOS](https://img.shields.io/badge/ðŸŽ_macOS-000000?style=for-the-badge&logo=apple&logoColor=white&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_mac)
+[![Linux latest](https://img.shields.io/badge/ðŸ§_Linux_latest-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_linux_latest)
+[![Linux 22.04](https://img.shields.io/badge/ðŸ§_Linux_22.04-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_linux_previous)
 
 ---
 
