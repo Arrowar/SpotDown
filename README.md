@@ -1,22 +1,16 @@
 <div align="center">
 
-## 📊 Project Status & Info
 [![PyPI Version](https://img.shields.io/pypi/v/spotdown?logo=pypi&logoColor=white&labelColor=2d3748&color=3182ce&style=for-the-badge)](https://pypi.org/project/spotdown)
 [![Last Commit](https://img.shields.io/github/last-commit/Arrowar/spotdown?logo=git&logoColor=white&labelColor=2d3748&color=805ad5&style=for-the-badge)](https://github.com/Arrowar/spotdown/commits)
 [![Issues](https://img.shields.io/github/issues/Arrowar/spotdown?logo=github&logoColor=white&labelColor=2d3748&color=ed8936&style=for-the-badge)](https://github.com/Arrowar/spotdown/issues)
 [![License](https://img.shields.io/github/license/Arrowar/spotdown?logo=gnu&logoColor=white&labelColor=2d3748&color=e53e3e&style=for-the-badge)](https://github.com/Arrowar/spotdown/blob/main/LICENSE)
 
-## 💝 Support the Project
-<a href='https://ko-fi.com/E1E11LVC83' target='_blank'>
-    <img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi4.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' />
-</a>
+---
 
-## 🚀 Download & Install
-
-[![Windows](https://img.shields.io/badge/🪟_Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_win.exe)
-[![macOS](https://img.shields.io/badge/🍎_macOS-000000?style=for-the-badge&logo=apple&logoColor=white&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_mac)
-[![Linux latest](https://img.shields.io/badge/🐧_Linux_latest-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_linux_latest)
-[![Linux 22.04](https://img.shields.io/badge/🐧_Linux_22.04-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_linux_previous)
+[![Windows](https://img.shields.io/badge/ðŸªŸ_Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_win.exe)
+[![macOS](https://img.shields.io/badge/ðŸŽ_macOS-000000?style=for-the-badge&logo=apple&logoColor=white&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_mac)
+[![Linux latest](https://img.shields.io/badge/ðŸ§_Linux_latest-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_linux_latest)
+[![Linux 22.04](https://img.shields.io/badge/ðŸ§_Linux_22.04-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=2d3748)](https://github.com/Arrowar/spotdown/releases/latest/download/spotdown_linux_previous)
 
 ---
 
@@ -72,14 +66,18 @@ The following dependencies will be automatically installed:
 1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/)
 2. Log in and create a new application
 3. Copy your **Client ID** and **Client Secret**
-4. Create a file named `.env` in the SpotDown directory with the following content:
+4. Open the `config.json` file and add your credentials in the **SPOTIFY** section:
 
-```
-SPOTIPY_CLIENT_ID=your_client_id_here
-SPOTIPY_CLIENT_SECRET=your_client_secret_here
+```json
+{
+    "SPOTIFY": {
+        "client_id": "your_spotify_client_id_here",
+        "client_secret": "your_spotify_client_secret_here"
+    }
+}
 ```
 
-5. Save the file. SpotDown will automatically load these credentials.
+5. Save the file. SpotDown will automatically load these credentials from the configuration file.
 
 ## Configuration
 
@@ -91,6 +89,10 @@ SpotDown uses a JSON configuration file with the following structure:
         "debug": false,
         "clean_console": true,
         "show_message": true
+    },
+    "SPOTIFY": {
+        "client_id": "your_spotify_client_id_here",
+        "client_secret": "your_spotify_client_secret_here"
     },
     "DOWNLOAD": {
         "allow_metadata": true,
@@ -111,6 +113,10 @@ SpotDown uses a JSON configuration file with the following structure:
 - **`debug`**: Enable/disable debug mode (detailed logging)
 - **`clean_console`**: Clear console output for a cleaner interface
 - **`show_message`**: Display informational messages during execution
+
+#### SPOTIFY Settings
+- **`client_id`**: Your Spotify API Client ID from the [Developer Dashboard](https://developer.spotify.com/dashboard/)
+- **`client_secret`**: Your Spotify API Client Secret from the [Developer Dashboard](https://developer.spotify.com/dashboard/)
 
 #### DOWNLOAD Settings
 - **`allow_metadata`**: Enable downloading of thumbnails and embedding metadata in the final file.

@@ -170,6 +170,7 @@ class ConsoleUtils:
             if not url:
                 console.print("[red]URL cannot be empty. Please enter a Spotify URL.[/red]")
                 continue
+            
             tipo = get_spotify_url_type(url)
             if tipo != "unknown":
                 return url, tipo
@@ -180,17 +181,15 @@ class ConsoleUtils:
         """Display a stylized start message in the console."""
         
         msg = r'''                                                                               
-                 _____                                                 _   _ ___     
-                |  _  |___ ___ ___ _ _ _ ___ ___    _ _    ___ ___ ___| |_|_|  _|_ _ 
-                |     |  _|  _| . | | | | .'|  _|  |_'_|  |_ -| . | . |  _| |  _| | |
-                |__|__|_| |_| |___|_____|__,|_|    |_,_|  |___|  _|___|_| |_|_| |_  |
-                                                              |_|               |___|
-        '''
+             _____                                                 _   _ ___     
+            |  _  |___ ___ ___ _ _ _ ___ ___    _ _    ___ ___ ___| |_|_|  _|_ _ 
+            |     |  _|  _| . | | | | .'|  _|  |_'_|  |_ -| . | . |  _| |  _| | |
+            |__|__|_| |_| |___|_____|__,|_|    |_,_|  |___|  _|___|_| |_|_| |_  |
+                                                          |_|               |___|
+        '''.rstrip()
 
-        if CLEAN_CONSOLE:
+        if CLEAN_CONSOLE: 
             os.system("cls" if platform.system() == 'Windows' else "clear")
-
+    
         if SHOW_MESSAGE:
             console.print(f"[purple]{msg}")
-            separator = "_" * (console.width - 2)
-            console.print(f"[cyan]{separator}[/cyan]\n")

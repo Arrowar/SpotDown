@@ -4,6 +4,10 @@
         "clean_console": true,
         "show_message": true
     },
+    "SPOTIFY": {
+        "client_id": "",
+        "client_secret": ""
+    },
     "DOWNLOAD": {
         "allow_metadata": true,
         "auto_first": false,

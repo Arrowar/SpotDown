@@ -173,14 +173,11 @@ class FileUtils:
         Exits with a message if not the official version.
         """
         python_implementation = platform.python_implementation()
-        python_version = platform.python_version()
 
         if python_implementation != "CPython":
             console.print(f"[bold red]Warning: You are using a non-official Python distribution: {python_implementation}.[/bold red]")
             console.print("Please install the official Python from [bold blue]https://www.python.org[/bold blue] and try again.", style="bold yellow")
             sys.exit(0)
-
-        console.print(f"\n[cyan]Python version: [bold red]{python_version}[/bold red]")
 
     @staticmethod
     def get_system_summary():
@@ -225,9 +222,9 @@ class FileUtils:
             console.log("[red]Can't locate ffmpeg or ffprobe")
             sys.exit(0)
 
-        ffmpeg_str = f"'{FileUtils.ffmpeg_path}'" if FileUtils.ffmpeg_path else "None"
-        ffprobe_str = f"'{FileUtils.ffprobe_path}'" if FileUtils.ffprobe_path else "None"
-        console.print(f"[cyan]Path: [red]ffmpeg [bold yellow]{ffmpeg_str}[/bold yellow][white], [red]ffprobe [bold yellow]{ffprobe_str}[/bold yellow][white].")
+        #ffmpeg_str = f"'{FileUtils.ffmpeg_path}'" if FileUtils.ffmpeg_path else "None"
+        #ffprobe_str = f"'{FileUtils.ffprobe_path}'" if FileUtils.ffprobe_path else "None"
+        #console.print(f"[cyan]Path: [red]ffmpeg [bold yellow]{ffmpeg_str}[/bold yellow][white], [red]ffprobe [bold yellow]{ffprobe_str}[/bold yellow][white].")
 
     @staticmethod
     def is_song_already_downloaded(artist: str, title: str) -> bool:

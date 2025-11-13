@@ -3,10 +3,10 @@
 import os
 import re
 import sys
+import time
 import json
 import logging
 from typing import Dict, List, Optional
-from dotenv import load_dotenv
 
 
 # External library
@@ -14,11 +14,11 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from rich.console import Console
 from rich.progress import Progress
+from SpotDown.utils.config_json import config_manager
 
 
 # Variable
 console = Console()
-load_dotenv()
 
 
 def extract_track_id(spotify_url):
@@ -47,12 +47,13 @@ def extract_playlist_id(spotify_url):
 
 class SpotifyExtractor:
     def __init__(self):
-        client_id = os.getenv("SPOTIPY_CLIENT_ID")
-        client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
+        client_id = config_manager.get("SPOTIFY", "client_id")
+        client_secret = config_manager.get("SPOTIFY", "client_secret")
 
         if not client_id or not client_secret:
-            console.print("[red]Missing Spotify credentials. Please create a .env file with SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET from https://developer.spotify.com/dashboard/")
-            sys.exit(1)
+            console.print("\n[red]Missing Spotify credentials. Please create a .env file with SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET from https://developer.spotify.com/dashboard/, then restart the application. Exiting.[/red]")
+            time.sleep(5)
+            sys.exit(0)
 
         self.sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
             client_id=client_id,
@@ -123,7 +124,7 @@ class SpotifyExtractor:
             logging.error(f"Spotify extraction error: {error_msg}")
 
             if "invalid_client" in error_msg:
-                console.print("[red]Spotify credentials are invalid. Please check your .env file and obtain valid credentials from https://developer.spotify.com/dashboard/. Exiting.")
+                console.print("[red]Spotify credentials are invalid. Please check your config.json file and obtain valid credentials from https://developer.spotify.com/dashboard/. Exiting.")
                 sys.exit(0)
                 
             return None
